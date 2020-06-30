@@ -1,0 +1,232 @@
+{% load staticfiles %}
+<html>
+<head>
+
+    <title>{% if system_setup.HeadTitle %}{{ system_setup.HeadTitle }}{% else %}Django Base Project{% endif %}</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/default/easyui.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/themes/icon.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+
+</head>
+<body class="easyui-layout" id="layout">
+<!-- 页头 -->
+<div region="north" border="false" style="height:60px;background:#A1C4ff;width:100%" ondblclick="collaspe()">
+
+    <div class="header">
+        <div class="toptitle">Django base project system</div>
+        <div class="logout">您好， {{request.user}}&nbsp&nbsp |&nbsp&nbsp <a href="mailto:carl.zl.xiang@foxconn.com?cc=beck.hb.lv@foxconn.com&bcc=red.yh.liu@foxconn.com
+&subject=Watch%20CTB物料跟蹤系統用戶需開發工程師幫助，請管理員盡快協調解決
+&body=Hi%20CTB%20Administrator/Developer:%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%0A%20%20%20%20%20%20%20%20%20請用戶將問題描述寫在上面空白處，為了幫助工程師更快找到問題所在，建議附上截圖並文字說明!若超過24小時未處理，請嘗試電話聯繫管理員560-66474,19924585840.">幫助</a> &nbsp&nbsp|&nbsp&nbsp <a href="javascript:void(0)" onclick="messagealert()" id="quit">退出</a>
+        </div>
+    </div>
+</div>
+
+<div  id="footer" data-options="region:'south',title:'footer',noheader:true" style="height:35px;line-height:30px;text-align:center;">
+    <strong>
+    {% if system_setup.copyright %}
+    {{ system_setup.copyright }}
+    {% else %}
+    Copyright © 2019-2020 Django base project
+    {% endif %}
+    </strong>
+
+</div>
+<div data-options="region:'west',title:'导航',split:true,iconCls:'icon-world'" style="width:180px;padding:10px;">
+    <ul id="nav"></ul>
+</div>
+<div data-options="region:'center'" style="overflow:hidden;">
+    <div id="tabs">
+        <div title="起始页" iconCls="icon-house" style="padding:0 10px;display:block;">
+            <h1 style="color:red">系統公告：</h1>
+            <ul>
+                <li>1.點擊右上角"幫助"可直接郵件聯系管理員與開發工程師;</li>
+                <li>2.Notes郵件通知已經開通，請各用戶完善email信息，多個email中間以英文的逗號隔開，最多添加5個email.</li>
+                <li>3.管理員email:carl.zl.xiang@foxconn.com;
+                      辦公位置:深圳龍華園區G15-5F NPI辦公室/成都園區M2-4F系統開發戰情室;
+                      聯繫方式: +8619924585840 Short#:(573)42+747394 ChengDu:(573)87677.</li>
+                <!--<li>写出bug的详细信息，若有问题，请在线和我们联系</li>-->
+            </ul>
+            <hr>
+        </div>
+    </div>
+</div>
+<div id="mm" style="width:120px;display:none;">
+	<div>全部关闭</div>
+	<div class="menu-sep"></div>
+	<div>关闭其他选项卡</div>
+	<div>关闭左侧选项卡</div>
+	<div>关闭右侧选项卡</div>
+</div>
+<script type="text/javascript " src="{% static 'js/jquery.min.js' %} "></script>
+<script type="text/javascript " src="{% static 'js/jquery.easyui.min.js' %} "></script>
+
+{#<script type="text/javascript " src="{% static 'js/admin.js' %} "></script>#}
+
+<script type="text/javascript">
+
+    $.parser.onComplete = function() {
+        $('body').css('visibility', 'visible');
+    };
+    //頂部收縮
+    function collaspe(){
+        $('#layout').layout('collapse','north');
+            }
+          $.extend($.messager.defaults,{
+                            ok:"确定",
+                            cancel:"取消"
+          });
+
+    //退出登錄時提醒
+    function messagealert(){
+        var his = $('#tabs').tabs('getSelected');
+        var all_tab = $('#tabs').tabs('tabs');
+        //非起始頁
+           // $.messager.confirm('提示', '是否退出登錄?', function(data){
+           //     if (data){
+           {#//         window.location.href='{% url 'logout'%}'#}
+           //     }
+           // });
+    }
+    $(function () {
+// function addTab(title, url) {
+//     if ($('#tabs').tabs('exists', title)) {
+//         $('#tabs').tabs('select', title);
+//         var selTab = $('#tabs').tabs('getSelected');
+//         var url = $(selTab.panel('options').content).attr('src');
+//         $('#tabs').tabs('update', {
+//             tab: selTab,
+//             options: {
+//                 content:createFrame(url)
+//             }
+//         })
+
+//     } else {
+//         var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%"></iframe>';
+//         $('#tabs').tabs('add', {
+//             title: title,
+//             content: content,
+//             closable: true
+//         });
+//     }
+// }
+    //加載菜單欄
+    var new_iframe = 0
+	$('#nav').tree({
+		url : "system/rbac/newmenu/",
+		method: 'get',
+		lines : true,
+		onLoadSuccess : function (node, data) {
+			if (data) {
+				$(data).each(function (index, value) {
+					if (this.state == 'closed') {
+						$('#nav').tree('expandAll');
+					}
+				});
+			}
+		},
+		onClick : function (node) {
+			if (node.url) {
+				if ($('#tabs').tabs('exists', node.text)) {
+					$('#tabs').tabs('select', node.text);
+				} else {
+                    new_iframe = 1
+				    var content = '<iframe scrolling="auto" frameborder="0"  src="'+node.url+'" style="width:100%;height:100%;"></iframe>';
+					$('#tabs').tabs('add', {
+						title : node.text,
+						iconCls : node.iconCls,
+						closable : true,
+						content:content,
+						//href : node.url ,
+					});
+				}
+			}
+		}
+	});
+	$('#tabs').tabs({
+    	fit: true,
+    	border: false,
+    	onSelect: function(title, index) {
+            if(new_iframe == 1){
+                new_iframe = 0
+                return
+            }
+    		var selTab = $('#tabs').tabs('getSelected');
+    		var url = $(selTab.panel('options').content).attr('src');
+    		if(url) {
+    			var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+    			$('#tabs').tabs('update', {
+    				tab: selTab,
+    				options: {
+    					content: content
+    				}
+    			});
+    		}
+    	},
+    	onAdd:function(t,i){
+	    var thisID = $(this).attr('id');
+	    var tabOp = $(this).tabs('options');
+	    $('#'+thisID+'>.tabs-header>.tabs-wrap>ul>li').unbind("contextmenu");
+	    $('#'+thisID+'>.tabs-header>.tabs-wrap>ul>li').contextmenu(function(e){
+		var tabIndex = $(e.target).parentsUntil('ul').prevAll().length;
+		var total = $('#tabs').tabs('tabs').length;
+		if(total < 3){
+		    return;
+		}
+        if(e.button == 2){
+            $('#mm').menu({
+                onClick:function(item){
+                switch (item.text) {
+                case '全部关闭':
+                    tabOp.closeAllTab(thisID,tabIndex);
+                    break;
+                case '关闭其他选项卡':
+                    tabOp.closeOtherTab(thisID,tabIndex);
+                    break;
+                case '关闭左侧选项卡':
+                    tabOp.closeLeftTab(thisID,tabIndex);
+                    break;
+                case '关闭右侧选项卡':
+                    tabOp.closeRightTab(thisID,tabIndex);
+                    break;
+            }
+                }
+            });
+            $('#mm').menu('show',{
+                left:e.pageX,
+                top:e.pageY
+            });
+        }
+        return false;
+        });
+        },
+        closeAllTab:function(id,tIndex){
+            var total = $('#'+id).tabs('tabs').length;
+            for(var $i=1;$i<total;$i++){
+                $('#'+id).tabs('close',1);
+            }
+
+        },
+        closeLeftTab:function(id,tIndex){
+            var num = tIndex;
+            for(var $i=1;$i<num;$i++){
+                $('#'+id).tabs('close',1);
+            }
+        },
+        closeRightTab:function(id,tIndex){
+            var total = $('#'+id).tabs('tabs').length;
+            var num = total-(tIndex+1);
+            for(var $i=0;$i<num;$i++){
+                $('#'+id).tabs('close',tIndex+1);
+            }
+        },
+        closeOtherTab:function(id,tIndex){
+            this.closeRightTab(id,tIndex);
+            this.closeLeftTab(id,tIndex);
+        }
+    });
+
+});
+	</script>
+</body>
+</html>

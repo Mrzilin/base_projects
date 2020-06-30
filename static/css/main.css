@@ -1,0 +1,55 @@
+
+body{
+	visibility:hidden;
+}
+
+
+
+.header{
+	background:url('images/topback.gif') repeat-x;
+	background1:#A1C4E4;
+	position:relative;
+	height:60px;
+	width:100%;
+	padding-left1:5px;
+}
+
+.toptitle {
+    position: absolute;
+    top: 15px;
+    left: 5px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.logout {
+    font-size:12px;
+	float:right;
+	padding:30px 15px 0 0;
+	color:#fff;
+}
+
+a {
+	color:#fff;
+	text-decoration:none;
+}
+a:hover {
+	text-decoration:underline;
+}
+
+.badge {
+	display: inline-block;
+	min-width: 10px;
+	padding: 3px 7px;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	background-color: #f00;
+	border-radius: 10px;
+}
