@@ -300,8 +300,8 @@ class UserViewSet(ModelViewSet):
     search_fields = ('username', 'name', 'mobile', 'email')
     ordering_fields = ('id',)
     authentication_classes = (JSONWebTokenAuthentication,)
-    permission_classes = (RbacPermission,)
-    #permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (RbacPermission,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_serializer_class(self):
         # 根据请求类型动态变更serializer
